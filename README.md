@@ -1,4 +1,4 @@
-==Binary Resources for C++ Compiler (BRCC)==
+#Binary Resources for C++ Compiler (BRCC)
 
 Version 1.0.0.
 
