@@ -1,4 +1,4 @@
-#Binary Resources for C++ Compiler (BRCC)
+# Binary Resources for C++ Compiler (BRCC)
 
 Version 1.0.0.
 
@@ -24,7 +24,7 @@ Example:
 
 Creates files './build/gen/binary_resources.hpp' and './build/gen/binary_resources.cpp'.
 
-The output `.cpp` file after I ran `brcc ./test-brc GUARD_HH bin_test ~/test_binary1.bin arbitrary_symbol /etc/issue`:
+The output `test-brcc.cpp` file after I ran `brcc ./test-brcc GUARD_HH bin_test ~/test_binary1.bin arbitrary_symbol /etc/issue`:
 
 ```
 #ifndef GUARD_HH
