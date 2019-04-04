@@ -19,14 +19,14 @@ Usage: brcc output_basename HEADER_GUARD [symbol_prefix binary_file]...
 
 Example: 
 
-    `brcc ./build/gen/binary_resources GAME_BINARY_RESOURCES_HH bin_vertex_shader ./src/vertex_shader.glsl \
-    bin_fragment_shader ./src/fragment_shader.glsl`
+    brcc ./build/gen/binary_resources GAME_BINARY_RESOURCES_HH bin_vertex_shader ./src/vertex_shader.glsl \
+    bin_fragment_shader ./src/fragment_shader.glsl
 
 Creates files './build/gen/binary_resources.hpp' and './build/gen/binary_resources.cpp'.
 
-The output data:
+The output `.cpp` file:
 
-```lang=cpp
+```
 #ifndef GUARD_HH
 #define GUARD_HH
 #include <cstdint>
