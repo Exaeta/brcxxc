@@ -8,7 +8,11 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+/*
+TODO:
+When generating headers only, don't read the entire input files if not nessecary.
 
+*/
 #include <iostream>
 #include <string>
 #include <exception>
@@ -23,8 +27,8 @@ static std::string progname;
 
 static void help()
 {
-  std::cerr << "Binary Resources for C++ Compiler (BRCC) version 1.2.2" << std::endl << std::endl;
-  std::cerr << "Usage: " << progname << " output_basename HEADER_GUARD [(-c|-i|-s) symbol_prefix binary_file]..." << std::endl << std::endl;
+  std::cerr << "Binary Resources for C++ Compiler (BRCC) version 1.3.2" << std::endl << std::endl;
+  std::cerr << "Usage: " << progname << " output_basename HEADER_GUARD [-h|-o] [(-c|-i|-s) symbol_prefix binary_file]..." << std::endl << std::endl;
   std::cerr << "Example: " <<std::endl << "    " <<  progname << " ./build/gen/binary_resources GAME_BINARY_RESOURCES_HH bin_vertex_shader ./src/vertex_shader.glsl \\" << std::endl <<
    "    bin_fragment_shader ./src/fragment_shader.glsl" <<std::endl;
   std::cerr << "  Creates files './build/gen/binary_resources.hpp' and './build/gen/binary_resources.cpp'" << std::endl;
@@ -99,6 +103,8 @@ int main(int argc, char **argv)
     return 0;
   }
   
+  int omode = 0b11;
+  
   std::string outputname = argv[1];
   std::string guardname = escape(argv[2]);
   
@@ -113,6 +119,16 @@ int main(int argc, char **argv)
     
     if (flag.size() != 0 && flag[0] == '-')
     {
+      if (flag == "-h") // generate header only
+      {
+        omode = 0b01;
+        continue;
+      }
+      else if (flag == "-o") // cpp file only
+      {
+        omode = 0b10;
+        continue;  
+      }
 
       if (flag == "-c")
       {
@@ -286,16 +302,40 @@ int main(int argc, char **argv)
     }
     body = bout.str();
   }
-  
-  std::ofstream headerf (outputname + ".hpp", std::ios::out | std::ios::trunc);
-  std::ofstream bodyf(outputname + ".cpp", std::ios::out | std::ios::trunc);
-  if (!headerf || !bodyf)
+  if (omode == 0b11)
   {
-    std::cerr << "Error opening files " << outputname << ".cpp, " << outputname << ".hpp for writing" << std::endl;
-    return -2;
+    std::ofstream headerf (outputname + ".hpp", std::ios::out | std::ios::trunc);
+    std::ofstream bodyf(outputname + ".cpp", std::ios::out | std::ios::trunc);
+    if (!headerf || !bodyf)
+    {
+      std::cerr << "Error opening files " << outputname << ".cpp, " << outputname << ".hpp for writing" << std::endl;
+      return -2;
+    }
+    headerf << header;
+    bodyf << body;
   }
-  headerf << header;
-  bodyf << body;
+  else if (omode == 0b01) // header only
+  {
+    std::ofstream headerf (outputname, std::ios::out | std::ios::trunc);
+    
+    if (!headerf)
+    {
+      std::cerr << "Error opening file " << outputname << " for writing" << std::endl;
+      return -2;
+    }
+    headerf << header;
+  }
+  else if (omode == 0b10) // body only
+  {
+    std::ofstream bodyf (outputname, std::ios::out | std::ios::trunc);
+    
+    if (!bodyf)
+    {
+      std::cerr << "Error opening file " << outputname << " for writing" << std::endl;
+      return -2;
+    }
+    bodyf << body;
+  }
   
   return 0;
   
