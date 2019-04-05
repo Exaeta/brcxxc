@@ -23,7 +23,7 @@ static std::string progname;
 
 static void help()
 {
-  std::cerr << "Binary Resources for C++ Compiler (BRCC) version 1.1.0" << std::endl << std::endl;
+  std::cerr << "Binary Resources for C++ Compiler (BRCC) version 1.2.1" << std::endl << std::endl;
   std::cerr << "Usage: " << progname << " output_basename HEADER_GUARD [(-c|-i|-s) symbol_prefix binary_file]..." << std::endl << std::endl;
   std::cerr << "Example: " <<std::endl << "    " <<  progname << " ./build/gen/binary_resources GAME_BINARY_RESOURCES_HH bin_vertex_shader ./src/vertex_shader.glsl \\" << std::endl <<
    "    bin_fragment_shader ./src/fragment_shader.glsl" <<std::endl;
@@ -130,7 +130,7 @@ int main(int argc, char **argv)
       }
       else if (flag == "-v")
       {
-        mode = 3;
+        mode = 4;
         use_vector = true;
       }
       else
