@@ -1,6 +1,6 @@
 # Binary Resources for C++ Compiler (BRCC)
 
-Version 1.0.0.
+Version 1.2.0.
 
 The Binary Resources for C++ Compiler is a simple cross platform compiler that
 converts binary files to C++ header and source files for inclusion in other 
@@ -15,14 +15,21 @@ as many binaries into a single output .cpp file as you want, and creates a
 corresponding .hpp file. You can manually set the header guard and it doesn't 
 gum up your code with autogeneration comments.
 
-Usage: brcc output_basename HEADER_GUARD [symbol_prefix binary_file]...
+Usage: brcc output_basename HEADER_GUARD [(-c|-i|-s|-v) symbol_prefix binary_file]...
 
 Example: 
 
-    brcc ./build/gen/binary_resources GAME_BINARY_RESOURCES_HH bin_vertex_shader ./src/vertex_shader.glsl \
+    brcc ./build/gen/binary_resources GAME_BINARY_RESOURCES_HH -s bin_vertex_shader ./src/vertex_shader.glsl \
     bin_fragment_shader ./src/fragment_shader.glsl
 
-Creates files './build/gen/binary_resources.hpp' and './build/gen/binary_resources.cpp'.
+Creates files './build/gen/binary_resources.hpp' and './build/gen/binary_resources.cpp', which have std::strings that import the data.
+
+Options:
+
+    * `-s` Stores the binary data in a `std::string`.
+    * `-c` Stores the binary data in a C style array.
+    * `-i` Stores the binary data in a `std::initializer_list<std::uint8_t>`.
+    * `-i` Stores the binary data in a `std::vector<std::uint8_t>`.
 
 The output `test-brcc.cpp` file after I ran `brcc ./test-brcc GUARD_HH bin_test ~/test_binary1.bin arbitrary_symbol /etc/issue`:
 
