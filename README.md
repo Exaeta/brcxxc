@@ -29,7 +29,7 @@ Options:
     * `-s` Stores the binary data in a `std::string`.
     * `-c` Stores the binary data in a C style array.
     * `-i` Stores the binary data in a `std::initializer_list<std::uint8_t>`.
-    * `-i` Stores the binary data in a `std::vector<std::uint8_t>`.
+    * `-v` Stores the binary data in a `std::vector<std::uint8_t>`.
 
 The output `test-brcc.cpp` file after I ran `brcc ./test-brcc GUARD_HH bin_test ~/test_binary1.bin arbitrary_symbol /etc/issue`:
 
