@@ -104,6 +104,7 @@ int main(int argc, char **argv)
   
   bool use_init = false;
   bool use_string = false;
+  bool use_vector = false;
   
   for (int i = 3; i < argc; i ++)
   {
@@ -126,6 +127,11 @@ int main(int argc, char **argv)
       {
         mode = 3;
         use_string = true;
+      }
+      else if (flag == "-v")
+      {
+        mode = 3;
+        use_vector = true;
       }
       else
       {
@@ -187,6 +193,7 @@ int main(int argc, char **argv)
     if (use_init || use_string ) hout << "#include <cinttypes>" << std::endl;    
     if (use_init) hout << "#include <initializer_list>" << std::endl;
     if (use_string) hout << "#include <string>" << std::endl;
+    if (use_vector) hout << "#include <string>" << std::endl;
     
     
     
@@ -206,6 +213,10 @@ int main(int argc, char **argv)
       else if (x.second.second == 3) // string
       {
         hout << "extern std::string const " << x.first << ";" << std::endl;
+      }
+      else if (x.second.second == 4) // vector
+      {
+        hout << "extern std::vector<std::uint8_t> const " << x.first << ";" << std::endl;
       }
       
     }
@@ -237,6 +248,11 @@ int main(int argc, char **argv)
       if (x.second.second == 3) // std::string
       {
         bout << "std::string const " << x.first << " {" << std::endl << "  ";
+      }
+      
+      if (x.second.second == 4) // std::vector
+      {
+        bout << "std::vector<std::uint8_t> const " << x.first << " {" << std::endl << "  ";
       }
       
       for (size_t y = 0; y < x.second.first.size(); y++)
