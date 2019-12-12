@@ -15,6 +15,4 @@ Version 2.x.x has been renamed BRCXXC to better reflect that it is intended for
 use with C++. In addition, there has been a major change to how the compiler is
 run and executed.
 
-```
-brcxxc HEADER ./build/include/brcxxc.hpp GUARD_BRCXXC_HPP STRING src/glsl/shader1.glsl glsl_shaders::shader1
-```
+The manual for how to use brcxxc is available at: https://rpnx.net/brcxxc-2.1.2.html
