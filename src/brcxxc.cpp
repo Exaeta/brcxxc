@@ -1,5 +1,5 @@
 /*
-Binary Resources for C++ Compiler (BRCXXC) version 2.1.1
+Binary Resources for C++ Compiler (BRCXXC) version 2.1.2
 Copyright 2019 Ryan P. Nicholl <exaeta@protonmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -34,7 +34,7 @@ int main(int argc, char ** argv)
 {
   int i = 1;
   
-  enum class mode { header, object };
+  enum class mode { header, object, fullfill };
   
   bool implementation = false;
   
@@ -73,16 +73,22 @@ st:
     md = mode::header;
     implementation = true;
   }
+  else if (false && execution_type == "FULLFILL")
+  {
+    md = mode::fullfill;
+    i++;
+    if (i >= argc)
+    {
+      std::cerr << "Unexpected end of argument list after FULLFILL" << std::endl;
+      return -1;
+    }
+  }
   else
   {
     std::cerr << "brcxxc: Expected OBJECT or HEADER" << std::endl;
     return -2;
   }
   
-  std::cout << "brcxxc: Execution mode " << execution_type << std::endl;
-  
-   std::cout << "brcxxc: Check Guard" << std::endl;
-
   std::string guard;
   
   
@@ -107,11 +113,9 @@ st:
       }
     }
 
-    std::cerr << "Header guard is: " << guard << std::endl;
     
     if (guard.empty())
     {
-      std::cerr << "brcxxc: Expected header guard" << std::endl;
       
       return -3;
     }
@@ -143,9 +147,7 @@ st:
     }
     
   }
-  
-  
-  std::cout << "brcxxc: Header Guard=" << guard << std::endl;
+
     
   
   if (i >= argc) 
@@ -154,25 +156,7 @@ st:
     return -2;
   }
   std::string output_file = argv[i++];
-  
-  std::cout << "brcxxc: Output file =" << output_file << std::endl;
-  
-  
-  bool needs_update = false;
-  try
-  {
-    if (! std::filesystem::exists(output_file))
-    {
-      needs_update = true;
-    }
-  }
-  catch (std::exception const & ex)
-  {
-    std::cerr << ex.what() << std::endl;
-    return -1;
-  }
- 
-    
+
   
   std::set<std::string> includes;
   
@@ -256,14 +240,14 @@ st:
       includes.insert("<vector>");
       includes.insert("<cinttypes>");
     }
-    else if (type == "C_U8_ARRAY")
+    else if (type == "C_CHAR_ARRAY")
     {
       std::size_t sz;
       
       sz = std::filesystem::file_size(filenam);
       std::stringstream ss;
       ss.imbue(std::locale::classic());
-      ss << "char " << short_symbol << "[" << sz << "]";
+      ss << "char const " << short_symbol << "[" << sz << "]";
       
       f.m_head_decl = ss.str() + ";";
       
@@ -278,10 +262,10 @@ st:
       sz = std::filesystem::file_size(filenam);
       std::stringstream ss;
       ss.imbue(std::locale::classic());
-      ss << "std::array<std::byte, "<<sz<<"> " << short_symbol << ";";
+      ss << "std::array<std::byte, "<<sz<<"> const " << short_symbol << ";";
       f.m_head_decl = ss.str();
       ss.str("");
-      ss << "std::array<std::byte, "<<sz<<"> " << full_symbol;
+      ss << "std::array<std::byte, "<<sz<<"> const " << full_symbol;
       f.m_full_decl = ss.str();
       if (md == mode::object) f.m_full_decl = ss.str();
       
@@ -309,11 +293,7 @@ st:
     }
     
     f.m_sym = std::move(symparts);
-    
-    
-    
-    std::cerr << "detected symbol head=" << f.m_head_decl << "  full=" << f.m_full_decl <<std::endl;
-    
+
     files.push_back(std::move(f));
     
     
@@ -353,7 +333,6 @@ st:
     
     while (dist1 < current_namespace.size())
     {
-      std::cout << "B" << std::endl;
       for (int i = 1; i < current_namespace.size(); i++)
       {
         output << "  ";
@@ -416,8 +395,6 @@ st:
   if (md == mode::object) for (auto const & x : files)
   {
     output << x.m_full_decl;
-
-    std::cerr << "x.m_fulldecl=" << x.m_full_decl <<std::endl;
 
     std::ifstream file( x.m_file_path, std::ios::binary );
 
@@ -487,7 +464,35 @@ st:
 
   }
 
-  std::cout << output.str() << std::endl;
+
+  std::string output_string = output.str();
+
+  bool do_update = false;
+  do_update = true; // just ignore the reading of the file, it's not good to integrate with build systems
+
+  if ( ! std::filesystem::exists(output_file))
+  {
+    do_update = true;
+  }
+  else
+  {
+    std::ifstream old_file;
+    old_file.open(output_file);
+    std::string old_file_str = std::string(std::istreambuf_iterator<char>(old_file), std::istreambuf_iterator<char>());
+    if (old_file_str != output_string)
+    {
+      do_update = true;
+    }
+    old_file.close();
+  }
+
+  if (do_update)
+  {
+    std::ofstream out_file;
+    out_file.open(output_file, std::ios::trunc);
+    std::copy(output_string.begin(), output_string.end(), std::ostreambuf_iterator<char>(out_file));
+  }
+
   
   
 }

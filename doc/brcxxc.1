@@ -1,0 +1,85 @@
+.TH BRCXXC 1
+.SH NAME
+brcxxc - Binary Resources for C++ Compiler (version 2.1.2)
+.SH DESCRIPTION
+A cross platform tool that converts abitrary files into C++ objects,
+intended for use with incremental build generators like CMake and Ninja.
+It can be used, for example, to compile .glsl shader sources directly into
+your OpenGL application executable instead of packaging them together with
+your executable. It can be used for any type of resource, shaders, images,
+sound files, 3D models, etc.
+.SH SYNOPSIS
+.B \fBbrcxxc\fR [\fBDLLEXPORT_ALL\fR|\fBDLLIMPORT_ALL\fR]
+((\fBHEADER\fR \fIheader-guard\fR)|\fBOBJECT\fR) \fIoutput_file\fR (\fITYPE\fR [\fBDLLEXPORT\fR|\fBDLLIMPORT\fR] \fIinput-file\fR \fIsymbol\fR)...
+
+.SH EXAMPLES
+
+The following command can be used to generate a header:
+
+.nf
+.RS
+brcxxc HEADER BIN_HEADER_HPP bin_header.hpp STRING /etc/issue bin::issue U8_VECTOR /etc/resolv.conf bin::resolveconf
+.RE
+.fi
+
+It yields:
+
+.nf
+.RS
+#ifndef BIN_HEADER_HPP
+#define BIN_HEADER_HPP
+#include <cinttypes>
+#include <string>
+#include <vector>
+namespace bin
+{
+  extern std::string const issue;
+  extern std::vector<std::uint8_t> const resolveconf;
+}
+#endif
+.RE
+.fi
+
+The following is an example of using brcxxc to generate .cpp files for object generation:
+
+.nf
+.RS
+brcxxc OBJECT bin_issue.cpp STRING /etc/issue bin::issue
+.RE
+.fi
+
+Depending on the content of /etc/issue, it could generate a file with the following contents:
+
+.nf
+.RS
+#include <string>
+namespace bin
+{
+  extern std::string const issue;
+}
+std::string const bin::issue {
+  0xC4, 0x96, 0xE6, 0x57, 0x87, 0x02, 0xD4, 0x96, 0xE6, 0x47, 0x02, 0x13, 0x83, 0xE2, 0x33, 0x02, 0x35, 0x97, 0xC6, 0x67,
+  0x96, 0x16, 0x02, 0xC5, 0xE6, 0x02, 0xC5, 0xC6, 0xA0, 0xA0
+};
+.RE
+.fi
+
+.SH TYPES
+A variety of types are available for usage with the generator.
+
+.RS
+\fBSTRING\fR std::string const
+
+\fBCHAR_VECTOR\fR std::vector<char> const
+
+\fBCHAR_ARRAY\fR std::array<char, \fISIZE\fR> const
+
+\fBU8_VECTOR\fR std::vector<std::uint8_t> const
+
+\fBU8_ARRAY\fR std::array<std::uint8_t, \fISIZE\fR> const
+
+
+\fBC_CHAR_ARRAY\fR char const [\fISIZE\fR]
+.RE
+.SH COPYRIGHT
+Copyright 2019 Ryan P. Nicholl <rnicholl@protonmail.com> https://rpnx.net/
