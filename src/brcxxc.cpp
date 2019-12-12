@@ -28,6 +28,7 @@ struct fi
   std::string m_file_path;
   bool m_export_dll = false;
   bool m_import_dll = false;
+  bool m_char = false;
 };
 
 int main(int argc, char ** argv)
@@ -218,12 +219,13 @@ st:
       
       f.m_head_decl = "std::string const " + short_symbol + ";";
       f.m_full_decl = "std::string const " + full_symbol;
+      f.m_char = true;
     }
     else if (type == "BYTE_VECTOR")
     {
       f.m_head_decl = "std::vector<std::byte> const "+ short_symbol + ";";
       f.m_full_decl = "std::vector<std::byte> const " + full_symbol;
-      
+
       includes.insert("<vector>");
       includes.insert("<cstddef>");
     }
@@ -231,6 +233,7 @@ st:
     {
       f.m_head_decl = "std::vector<char> const "+ short_symbol + ";";
       f.m_full_decl = "std::vector<char> const " + full_symbol;
+      f.m_char = true;
       includes.insert("<vector>");
     }
     else if (type == "U8_VECTOR")
@@ -250,7 +253,7 @@ st:
       ss << "char const " << short_symbol << "[" << sz << "]";
       
       f.m_head_decl = ss.str() + ";";
-      
+      f.m_char = true;
       if (md == mode::object) f.m_full_decl = ss.str();
       //includes.insert("<inttypes.h>");
     }
@@ -406,6 +409,8 @@ st:
 
       for (size_t i = 0; i < vec.size(); ++i)
       {
+        if (x.m_char)
+          output << "char(";
         output << "0x";
 
         int a = 0;
@@ -424,6 +429,10 @@ st:
 
         output << ca << cb;
 
+        if (x.m_char)
+        {
+          output << ")";
+        }
         if (i != vec.size() - 1) output << ", ";
         else output << " };" << std::endl;
       }
