@@ -446,6 +446,8 @@ st:
         output << "  ";
         for (size_t z = i; z < vec.size() && z < i + 20; z++)
         {
+          if (x.m_char)
+            output << "char(";
           output << "0x";
 
           int a = 0;
@@ -464,6 +466,8 @@ st:
 
           output << ca << cb;
 
+          if (x.m_char)
+            output << ")";
           if (z == vec.size() -  1) output << std::endl << "};" << std::endl;
           else if (z == i+20-1) output << "," << std::endl;
           else output << ", ";
