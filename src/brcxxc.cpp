@@ -236,7 +236,7 @@ st:
     else if (type == "U8_VECTOR")
     {
       f.m_head_decl = "std::vector<std::uint8_t> const "+ short_symbol + ";";
-      f.m_full_decl = "std::vector<std::uint8_t> const "+ full_symbol + ";";
+      f.m_full_decl = "std::vector<std::uint8_t> const "+ full_symbol;
       includes.insert("<vector>");
       includes.insert("<cinttypes>");
     }
@@ -283,7 +283,7 @@ st:
       ss << "std::array<std::uint8_t, " << sz << "> " << short_symbol << ";";            
       f.m_head_decl = ss.str();
       ss.str("");
-      ss << "std::array<std::uint8_t, " << sz << "> " << full_symbol << ";";            
+      ss << "std::array<std::uint8_t, " << sz << "> " << full_symbol;
       
       
       
@@ -468,7 +468,7 @@ st:
   std::string output_string = output.str();
 
   bool do_update = false;
-  do_update = true; // just ignore the reading of the file, it's not good to integrate with build systems
+  //do_update = true; // just ignore the reading of the file, it's not good to integrate with build systems
 
   if ( ! std::filesystem::exists(output_file))
   {
@@ -491,7 +491,13 @@ st:
     std::ofstream out_file;
     out_file.open(output_file, std::ios::trunc);
     std::copy(output_string.begin(), output_string.end(), std::ostreambuf_iterator<char>(out_file));
+    out_file.flush();
+    out_file.close();
   }
+
+
+
+  return 0;
 
   
   
