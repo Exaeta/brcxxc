@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 
-project(brcxxc VERSION 2.1.3)
+project(brcxxc VERSION 2.1.4)
 
 add_executable(brcxxc src/brcxxc.cpp)
 set_target_properties(brcxxc PROPERTIES CXX_STANDARD 17)
@@ -22,7 +22,7 @@ endif()
 set (CPACK_PACKAGE_VENDOR "RPNX")
 set (CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_LIST_DIR}/README.md")
 set (CPACK_PACKAGE_DESCRIPTION_SUMMARY "A compiler that converts arbitrary data into C++ objects")
-set (CPACK_PACKAGE_VERSION "2.1.3")
+set (CPACK_PACKAGE_VERSION "2.1.4")
 set (CPACK_RPM_PACKAGE_URL "https://rpnx.net/")
 #set (CPACK_SYSTEM_NAME "${CMAKE_SYSTEM_NAME}")
 #set (CPACK_PACKAGE_FILE_NAME "brcxxc-${CPACK_PACKAGE_VERSION}-${CPACK_SYSTEM_NAME}")
