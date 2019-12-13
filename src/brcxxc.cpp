@@ -427,7 +427,7 @@ st:
         if (b < 10) cb = '0' + b;
         else cb = 'A' + b - 10;
 
-        output << ca << cb;
+        output << cb << ca;
 
         if (x.m_char)
         {
@@ -464,7 +464,7 @@ st:
           if (b < 10) cb = '0' + b;
           else cb = 'A' + b - 10;
 
-          output << ca << cb;
+          output << cb << ca;
 
           if (x.m_char)
             output << ")";
