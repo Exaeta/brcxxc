@@ -11,10 +11,10 @@ if ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU") )
   target_link_libraries(brcxxc stdc++fs)
 endif()
 
-install(TARGETS brcxxc RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+install(TARGETS brcxxc RUNTIME DESTINATION bin)
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  install(FILES doc/brcxxc.1 DESTINATION ${CMAKE_INSTALL_PREFIX}/man/man1)
+  install(FILES doc/brcxxc.1 DESTINATION man/man1)
 endif()
 
 
