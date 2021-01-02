@@ -1,5 +1,7 @@
 MOVED to https://github.com/rpnx-net/brcxxc
 
+No further updates to this git repo will be provided.
+
 # Binary Resources for C++ Compiler (BRCXXC)
 
 Version 2.1.4
